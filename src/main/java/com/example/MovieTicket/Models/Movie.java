@@ -1,9 +1,6 @@
 package com.example.MovieTicket.Models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 
 
@@ -17,5 +14,6 @@ public class Movie {
     private String description;
     private int duration;
     private String genre;
+    private String imageURL;
 
 }
