@@ -1,3 +1,5 @@
-Insert into movie(name, description, duration, genre) values
-('Tom & Jerry', 'Story about a cat and a mouse', 120, 'Cartoon'),
-('Titanic', 'Story the ship', 120, 'Romantic');
+Insert into movie(name, description, duration, genre, imageURL) values
+('Tom & Jerry', 'A classic comedy animation about the endless chase between Tom the cat and Jerry the mouse, filled with humorous and entertaining moments for all ages.', 90, 'Cartoon','https://res.cloudinary.com/drzmz2naf/image/upload/e_improve,w_300,h_600,c_thumb,g_auto/v1759494240/tom_jerrypng_rr5kpa.png'),
+('Titanic', 'A famous romantic–disaster film telling the tragic love story of Jack and Rose aboard the legendary Titanic, tied to the historic sinking of 1912.', 120, 'Romantic','https://res.cloudinary.com/drzmz2naf/image/upload/e_improve,w_300,h_600,c_thumb,g_auto/v1759517018/Poster/Titanic_poster_psdehi.jpg'),
+('Demon Slayer', 'An action–fantasy anime following Tanjiro’s journey to fight demons and protect his sister Nezuko, while searching for a way to turn her back into a human', 130, 'Action','https://res.cloudinary.com/drzmz2naf/image/upload/e_improve,w_300,h_600,c_thumb,g_auto/v1759517390/Poster/Kimetsu_No_Yaiba_Mugen_Jyo-hen_theatrical_poster_xfkh7o.jpg'),
+('Avengers: Endgame', 'A grand Marvel superhero film where the Avengers unite one last time to face Thanos and restore balance to the universe.', 120, 'Superhero','https://res.cloudinary.com/drzmz2naf/image/upload/e_improve,w_300,h_600,c_thumb,g_auto/v1759517314/Poster/91hIN_dNYUL._UF894_1000_QL80__os5bcc.jpg');

@@ -2,6 +2,7 @@ package com.example.MovieTicket.Controllers;
 
 import com.example.MovieTicket.Models.Movie;
 import com.example.MovieTicket.Services.MovieService;
+import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -60,6 +61,11 @@ public class MovieController {
         }catch (Exception e){
             return new ResponseEntity<>("Failed to delete movie",HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+    @GetMapping("/movies/search")
+    public ResponseEntity<List<Movie>> searchMovieByNameAndGenre(@RequestParam String keyword){
+        List<Movie> movies = service.searchMovieByNameAndGenre(keyword);
+        return new ResponseEntity<>(movies,HttpStatus.OK);
     }
 
 }

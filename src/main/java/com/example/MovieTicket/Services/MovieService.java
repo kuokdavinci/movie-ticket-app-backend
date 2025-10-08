@@ -4,7 +4,6 @@ import com.example.MovieTicket.Models.Movie;
 import com.example.MovieTicket.Repositories.MovieRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -32,5 +31,9 @@ public class MovieService {
 
     public void deleteMovie(int movieId) {
          repo.deleteById(movieId);
+    }
+
+    public List<Movie> searchMovieByNameAndGenre(String keyword) {
+        return repo.searchMovieByNameAndGenre(keyword);
     }
 }
