@@ -10,11 +10,11 @@ import lombok.Data;
 public class Movie {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "movie_id")
     private int movie_id;
     private String name;
     private String description;
     private int duration;
     private String genre;
     private String imageURL;
-
 }

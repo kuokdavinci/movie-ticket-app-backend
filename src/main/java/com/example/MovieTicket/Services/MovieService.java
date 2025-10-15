@@ -10,7 +10,7 @@ import java.util.List;
 @Service
 public class MovieService {
     @Autowired
-    MovieRepo repo;
+    private MovieRepo repo;
 
     public List<Movie> getAllMovies() {
         return repo.findAll();
