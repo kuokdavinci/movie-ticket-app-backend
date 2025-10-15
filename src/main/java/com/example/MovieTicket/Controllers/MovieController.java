@@ -5,6 +5,7 @@ import com.example.MovieTicket.Services.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.List;
 public class MovieController {
     @Autowired
     private MovieService service;
+
 
     @GetMapping("/movies")
     public ResponseEntity<List<Movie>> getAllMovies() {
@@ -29,7 +31,7 @@ public class MovieController {
         else
             return new ResponseEntity<>("Movie not found!",HttpStatus.NOT_FOUND);
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/movies")
     public ResponseEntity<?> addMovie(@RequestBody Movie movie) {
         try {
@@ -38,6 +40,7 @@ public class MovieController {
             return new ResponseEntity<>("Failed to create movie", HttpStatus.BAD_REQUEST);
         }
     }
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/movies/{movieId}")
     public ResponseEntity<?> updateMovie(@PathVariable int movieId, @RequestBody Movie movie){
         try{
@@ -48,6 +51,7 @@ public class MovieController {
             return new ResponseEntity<>("Failed to update movie",HttpStatus.BAD_REQUEST);
         }
     }
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/movies/{movieId}")
     public ResponseEntity<?> deleteMovie(@PathVariable int movieId) {
         try {
