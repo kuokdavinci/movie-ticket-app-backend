@@ -31,4 +31,7 @@ public class UserService {
             return jwtService.generateToken(user.getUsername());
         return "Failed";
     }
+    public User findByUsername(String username) {
+        return repo.findByUsername(username);
+    }
 }

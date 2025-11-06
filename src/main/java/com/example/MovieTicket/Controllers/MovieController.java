@@ -44,7 +44,7 @@ public class MovieController {
     @PutMapping("/movies/{movieId}")
     public ResponseEntity<?> updateMovie(@PathVariable int movieId, @RequestBody Movie movie){
         try{
-             movie.setMovie_id(movieId);
+             movie.setMovieId(movieId);
             return new ResponseEntity<>(service.updateMovie(movie),HttpStatus.OK);
         }
         catch (Exception e){

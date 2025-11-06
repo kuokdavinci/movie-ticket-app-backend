@@ -3,15 +3,16 @@ package com.example.MovieTicket.Models;
 import jakarta.persistence.*;
 import lombok.Data;
 
-
 @Entity
 @Data
-@Table(name="movies")
+@Table(name = "movies")
 public class Movie {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "movie_id")
-    private int movie_id;
+    private int movieId;
+
     private String name;
     private String description;
     private int duration;
