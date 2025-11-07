@@ -1,9 +1,6 @@
 package com.example.MovieTicket.Services;
 
-import com.example.MovieTicket.Models.Booking;
-import com.example.MovieTicket.Models.Seat;
-import com.example.MovieTicket.Models.Showtime;
-import com.example.MovieTicket.Models.User;
+import com.example.MovieTicket.Models.*;
 import com.example.MovieTicket.Repositories.BookingRepo;
 import com.example.MovieTicket.Repositories.SeatRepo;
 import com.example.MovieTicket.Repositories.ShowtimeRepo;
@@ -15,6 +12,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class BookingService {
@@ -40,7 +39,6 @@ public class BookingService {
         Seat seat = seatRepo.findBySeatNumber(seatNumber)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy ghế " + seatNumber));
 
-        // Kiểm tra trùng ghế
         if (bookingRepo.existsByShowtimeAndSeat(showtime, seat)) {
             throw new RuntimeException("Ghế số " + seatNumber + " đã được đặt trước đó!");
         }
@@ -58,12 +56,14 @@ public class BookingService {
     public List<Booking> getBookingsByUser(User user) {
         return bookingRepo.findByUser(user);
     }
-    public List<Seat> getAvailableSeats(int showtimeId) {
+    public List<SeatDTO> getAvailableSeats(int showtimeId) {
         Showtime showtime = showtimeRepo.findById(showtimeId)
-                .orElseThrow(() -> new RuntimeException("No available seat"));
+                .orElseThrow(() -> new RuntimeException("Showtime không tồn tại"));
 
+        Movie movie = showtime.getMovie();
+        int movieId = (movie != null) ? movie.getMovieId() : 0;
 
-        List<Seat> allSeats = seatRepo.findAll();
+        List<Seat> allSeats = seatRepo.findByShowtime_ShowtimeId(showtimeId);
 
         List<Seat> bookedSeats = bookingRepo.findByShowtime(showtime)
                 .stream()
@@ -72,6 +72,21 @@ public class BookingService {
 
         return allSeats.stream()
                 .filter(seat -> !bookedSeats.contains(seat))
-                .toList();
+                .map(seat -> new SeatDTO(
+                        seat.getSeatId(),
+                        seat.getSeatNumber(),
+                        seat.getPrice(),
+                        seat.getShowtime().getShowtimeId(),
+                        seat.getShowtime().getMovie().getMovieId()
+                ))
+                .collect(Collectors.toList());
+    }
+    public void deleteBooking(int bookingId) {
+        bookingRepo.deleteById(bookingId);
+    }
+
+
+    public Optional<Booking> getBookingById(int bookingId) {
+        return bookingRepo.findById(bookingId);
     }
 }
