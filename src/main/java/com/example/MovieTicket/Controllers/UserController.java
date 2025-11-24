@@ -18,8 +18,16 @@ public class UserController {
     private JWTService jwtService;
 
     @PostMapping("/register")
-    public User register(@RequestBody User user){
-        return service.register(user);
+    public ResponseEntity<?> register(@RequestBody User user){
+        try {
+            User savedUser = service.register(user);
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to register: " + e.getMessage());
+        }
     }
 
     @PostMapping("/login")

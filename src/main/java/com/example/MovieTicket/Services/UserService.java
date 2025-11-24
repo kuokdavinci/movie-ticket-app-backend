@@ -2,6 +2,7 @@ package com.example.MovieTicket.Services;
 
 import com.example.MovieTicket.Models.User;
 import com.example.MovieTicket.Repositories.UserRepo;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,9 +20,14 @@ public class UserService {
     private JWTService jwtService;
     private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
 
-    public User register(User user){
+    @Transactional
+    public User register(User user) {
+        if (repo.existsByUsername(user.getUsername())) {
+            throw new RuntimeException("Username already exists");
+        }
         user.setPassword(encoder.encode(user.getPassword()));
         user.setRole("ROLE_USER");
+
         return repo.save(user);
     }
 
