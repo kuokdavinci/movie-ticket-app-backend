@@ -1,5 +1,6 @@
 package com.example.MovieTicket.Controllers;
 
+import com.example.MovieTicket.DTOs.BookingResponseDTO;
 import com.example.MovieTicket.Models.*;
 import com.example.MovieTicket.Services.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +47,7 @@ public class BookingController {
     }
 
     @GetMapping("/my-bookings")
-    public List<Booking> getUserBookings(@AuthenticationPrincipal UserPrincipal principal) {
+    public List<BookingResponseDTO> getUserBookings(@AuthenticationPrincipal UserPrincipal principal) {
         User user = principal.getUser();
         return bookingService.getBookingsByUser(user);
     }

@@ -1,9 +1,11 @@
 package com.example.MovieTicket.Models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalTime;
+import java.util.List;
 
 @Entity
 @Data
@@ -21,4 +23,9 @@ public class Showtime {
     @ManyToOne
     @JoinColumn(name = "movie_id", nullable = false)
     private Movie movie;
+
+
+//    @OneToMany(mappedBy = "showtime")
+//    @JsonManagedReference
+//    private List<Booking> bookings;
 }

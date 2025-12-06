@@ -1,5 +1,6 @@
 package com.example.MovieTicket.Models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.math.BigDecimal;
@@ -14,6 +15,7 @@ public class Booking {
     private int booking_id;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "user_id")
     private User user;
 

@@ -1,7 +1,10 @@
 package com.example.MovieTicket.Models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
+
+import java.util.List;
 
 @Data
 @Entity
@@ -26,4 +29,8 @@ public class User {
                 ", password='" + password + '\'' +
                 '}';
     }
+
+    @OneToMany(mappedBy = "user")
+    @JsonManagedReference
+    private List<Booking> bookings;
 }

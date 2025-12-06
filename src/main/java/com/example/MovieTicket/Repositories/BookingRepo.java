@@ -1,5 +1,6 @@
 package com.example.MovieTicket.Repositories;
 
+import com.example.MovieTicket.DTOs.BookingResponseDTO;
 import com.example.MovieTicket.Models.Booking;
 import com.example.MovieTicket.Models.Seat;
 import com.example.MovieTicket.Models.Showtime;

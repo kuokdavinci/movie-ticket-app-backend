@@ -1,5 +1,7 @@
 package com.example.MovieTicket.Services;
 
+import com.example.MovieTicket.DTOs.BookingResponseDTO;
+import com.example.MovieTicket.Mappers.BookingMapper;
 import com.example.MovieTicket.Models.*;
 import com.example.MovieTicket.Repositories.BookingRepo;
 import com.example.MovieTicket.Repositories.SeatRepo;
@@ -27,6 +29,9 @@ public class BookingService {
     @Autowired
     private SeatRepo seatRepo;
 
+    @Autowired
+    private BookingMapper bookingMapper;
+
     public List<Showtime> getShowtimesByMovie(int movieId) {
         return showtimeRepo.findByMovie_MovieIdAndStartTimeAfter(movieId, LocalTime.ofSecondOfDay(LocalTime.now().getHour()));
     }
@@ -53,12 +58,12 @@ public class BookingService {
         return bookingRepo.save(booking);
     }
 
-    public List<Booking> getBookingsByUser(User user) {
-        return bookingRepo.findByUser(user);
+    public List<BookingResponseDTO> getBookingsByUser(User user) {
+        return bookingRepo.findByUser(user).stream().map(bookingMapper::toBookingDTO).collect(Collectors.toList());
     }
     public List<SeatDTO> getAvailableSeats(int showtimeId) {
         Showtime showtime = showtimeRepo.findById(showtimeId)
-                .orElseThrow(() -> new RuntimeException("Showtime không tồn tại"));
+                .orElseThrow(() -> new RuntimeException("Showtime doesn't exist"));
 
         Movie movie = showtime.getMovie();
         int movieId = (movie != null) ? movie.getMovieId() : 0;
