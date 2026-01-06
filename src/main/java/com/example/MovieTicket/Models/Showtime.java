@@ -1,11 +1,9 @@
 package com.example.MovieTicket.Models;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalTime;
-import java.util.List;
 
 @Entity
 @Data

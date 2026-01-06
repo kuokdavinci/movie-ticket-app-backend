@@ -1,6 +1,7 @@
 package com.example.MovieTicket.Controllers;
 
 import com.example.MovieTicket.DTOs.BookingResponseDTO;
+import com.example.MovieTicket.DTOs.SeatDTO;
 import com.example.MovieTicket.Models.*;
 import com.example.MovieTicket.Services.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;

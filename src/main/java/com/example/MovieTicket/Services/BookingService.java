@@ -1,7 +1,10 @@
 package com.example.MovieTicket.Services;
 
 import com.example.MovieTicket.DTOs.BookingResponseDTO;
+
+import com.example.MovieTicket.DTOs.SeatDTO;
 import com.example.MovieTicket.Mappers.BookingMapper;
+import com.example.MovieTicket.Mappers.SeatMapper;
 import com.example.MovieTicket.Models.*;
 import com.example.MovieTicket.Repositories.BookingRepo;
 import com.example.MovieTicket.Repositories.SeatRepo;
@@ -32,6 +35,9 @@ public class BookingService {
     @Autowired
     private BookingMapper bookingMapper;
 
+    @Autowired
+    private SeatMapper seatMapper;
+
     public List<Showtime> getShowtimesByMovie(int movieId) {
         return showtimeRepo.findByMovie_MovieIdAndStartTimeAfter(movieId, LocalTime.ofSecondOfDay(LocalTime.now().getHour()));
     }
@@ -39,13 +45,13 @@ public class BookingService {
     @Transactional
     public Booking bookTicket(int movieId, int showtimeId, int seatNumber, User user) {
         Showtime showtime = showtimeRepo.findById(showtimeId)
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy suất chiếu"));
+                .orElseThrow(() -> new RuntimeException("Showtime not found!"));
 
         Seat seat = seatRepo.findBySeatNumber(seatNumber)
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy ghế " + seatNumber));
+                .orElseThrow(() -> new RuntimeException("Seat not found! " + seatNumber));
 
         if (bookingRepo.existsByShowtimeAndSeat(showtime, seat)) {
-            throw new RuntimeException("Ghế số " + seatNumber + " đã được đặt trước đó!");
+            throw new RuntimeException("Seat " + seatNumber + " is booked!");
         }
 
         Booking booking = new Booking();
@@ -77,13 +83,7 @@ public class BookingService {
 
         return allSeats.stream()
                 .filter(seat -> !bookedSeats.contains(seat))
-                .map(seat -> new SeatDTO(
-                        seat.getSeatId(),
-                        seat.getSeatNumber(),
-                        seat.getPrice(),
-                        seat.getShowtime().getShowtimeId(),
-                        seat.getShowtime().getMovie().getMovieId()
-                ))
+                .map(seatMapper::toSeatDTO)
                 .collect(Collectors.toList());
     }
     public void deleteBooking(int bookingId) {
