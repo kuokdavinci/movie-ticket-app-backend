@@ -41,16 +41,25 @@ class MovieServiceTest {
     }
 
     @Test
-    void testGetMovieById() {
+    void testGetMovieById_found() {
         Movie movie = new Movie();
-        movie.setMovie_id(1);
+        movie.setMovieId(1);
         when(movieRepo.findById(1)).thenReturn(Optional.of(movie));
 
         Movie result = movieService.getMovieById(1);
 
         assertNotNull(result);
-        assertEquals(1, result.getMovie_id());
+        assertEquals(1, result.getMovieId());
         verify(movieRepo, times(1)).findById(1);
+    }
+    @Test
+    void testGetMovieById_notFound() {
+        when(movieRepo.findById(999)).thenReturn(Optional.empty());
+
+        Movie result = movieService.getMovieById(999);
+
+        assertNull(result);
+        verify(movieRepo, times(1)).findById(999);
     }
 
     @Test
@@ -63,6 +72,16 @@ class MovieServiceTest {
         assertNotNull(result);
         verify(movieRepo, times(1)).save(movie);
     }
+    @Test
+    void testUpdateMovie() {
+        Movie movie = new Movie();
+        when(movieRepo.save(movie)).thenReturn(movie);
+
+        Movie result = movieService.updateMovie(movie);
+
+        assertEquals(movie, result);
+        verify(movieRepo).save(movie);
+    }
 
     @Test
     void testDeleteMovie() {
@@ -70,7 +89,7 @@ class MovieServiceTest {
         verify(movieRepo, times(1)).deleteById(1);
     }
     @Test
-    void testSearchMovieByNameAndGenre_Found() {
+    void testSearchMovieByNameAndGenre_found() {
         Movie movie1 = new Movie();
         movie1.setName("Avatar");
         when(movieRepo.searchMovieByNameAndGenre("Avatar")).thenReturn(Arrays.asList(movie1));
@@ -82,7 +101,7 @@ class MovieServiceTest {
         verify(movieRepo, times(1)).searchMovieByNameAndGenre("Avatar");
     }
     @Test
-    void testSearchMovieByNameAndGenre_NotFound() {
+    void testSearchMovieByNameAndGenre_notFound() {
         when(movieRepo.searchMovieByNameAndGenre("Unknown")).thenReturn(Arrays.asList());
 
         List<Movie> result = movieService.searchMovieByNameAndGenre("Unknown");

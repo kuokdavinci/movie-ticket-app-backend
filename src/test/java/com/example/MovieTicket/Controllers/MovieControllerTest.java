@@ -31,10 +31,10 @@ class MovieControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @MockitoBean  // New annotation replacing @MockBean
+    @MockitoBean
     private MovieService movieService;
 
-    @MockitoBean  // Mock JWT service if needed by controller
+    @MockitoBean
     private JWTService jwtService;
 
     private Movie movie1;
@@ -44,11 +44,11 @@ class MovieControllerTest {
     @BeforeEach
     void setUp() {
         movie1 = new Movie();
-        movie1.setMovie_id(1);
+        movie1.setMovieId(1);
         movie1.setName("Tom & Jerry");
 
         movie2 = new Movie();
-        movie2.setMovie_id(2);
+        movie2.setMovieId(2);
         movie2.setName("Avengers");
 
         movieList = Arrays.asList(movie1, movie2);
@@ -68,7 +68,7 @@ class MovieControllerTest {
     }
 
     @Test
-    void testGetMovieById_Found() throws Exception {
+    void testGetMovieById_found() throws Exception {
         when(movieService.getMovieById(1)).thenReturn(movie1);
 
         mockMvc.perform(get("/api/movies/1"))
@@ -79,7 +79,7 @@ class MovieControllerTest {
     }
 
     @Test
-    void testGetMovieById_NotFound() throws Exception {
+    void testGetMovieById_notFound() throws Exception {
         when(movieService.getMovieById(99)).thenReturn(null);
 
         mockMvc.perform(get("/api/movies/99"))
@@ -119,7 +119,7 @@ class MovieControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    void testDeleteMovie_Found() throws Exception {
+    void testDeleteMovie_found() throws Exception {
         when(movieService.getMovieById(1)).thenReturn(movie1);
         doNothing().when(movieService).deleteMovie(1);
 
@@ -131,7 +131,7 @@ class MovieControllerTest {
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    void testDeleteMovie_NotFound() throws Exception {
+    void testDeleteMovie_notFound() throws Exception {
         when(movieService.getMovieById(99)).thenReturn(null);
 
         mockMvc.perform(delete("/api/movies/99"))
