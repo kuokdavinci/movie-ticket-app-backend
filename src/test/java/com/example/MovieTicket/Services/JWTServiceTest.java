@@ -10,7 +10,7 @@ class JWTServiceTest {
 
     @Test
     void generateExtractAndValidateToken_success() {
-        JWTService jwtService = new JWTService();
+        JWTService jwtService = new JWTService("c29tZS1zZWNyZXQtc3RyaW5nLXdpdGgtYXQtbGVhc3QtMzItYnl0ZXM");
 
         String token = jwtService.generateToken("alice");
         UserDetails userDetails = User.withUsername("alice").password("pw").roles("USER").build();
@@ -22,7 +22,7 @@ class JWTServiceTest {
 
     @Test
     void validateToken_falseForDifferentUser() {
-        JWTService jwtService = new JWTService();
+        JWTService jwtService = new JWTService("c29tZS1zZWNyZXQtc3RyaW5nLXdpdGgtYXQtbGVhc3QtMzItYnl0ZXM");
 
         String token = jwtService.generateToken("alice");
         UserDetails another = User.withUsername("bob").password("pw").roles("USER").build();
