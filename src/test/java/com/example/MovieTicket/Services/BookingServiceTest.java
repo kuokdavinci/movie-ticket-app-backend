@@ -62,7 +62,7 @@ class BookingServiceTest {
         seat.setPrice(BigDecimal.valueOf(120000));
 
         when(showtimeRepo.findById(2)).thenReturn(Optional.of(showtime));
-        when(seatRepo.findBySeatNumber(10)).thenReturn(Optional.of(seat));
+        when(seatRepo.findByShowtime_ShowtimeIdAndSeatNumber(2, 10)).thenReturn(Optional.of(seat));
         when(bookingRepo.existsByShowtimeAndSeat(showtime, seat)).thenReturn(false);
         when(bookingRepo.save(any(Booking.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
@@ -85,7 +85,7 @@ class BookingServiceTest {
         seat.setPrice(null);
 
         when(showtimeRepo.findById(2)).thenReturn(Optional.of(showtime));
-        when(seatRepo.findBySeatNumber(5)).thenReturn(Optional.of(seat));
+        when(seatRepo.findByShowtime_ShowtimeIdAndSeatNumber(2, 5)).thenReturn(Optional.of(seat));
         when(bookingRepo.existsByShowtimeAndSeat(showtime, seat)).thenReturn(false);
         when(bookingRepo.save(any(Booking.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
@@ -108,7 +108,7 @@ class BookingServiceTest {
     void bookTicket_throwWhenSeatNotFound() {
         Showtime showtime = new Showtime();
         when(showtimeRepo.findById(2)).thenReturn(Optional.of(showtime));
-        when(seatRepo.findBySeatNumber(10)).thenReturn(Optional.empty());
+        when(seatRepo.findByShowtime_ShowtimeIdAndSeatNumber(2, 10)).thenReturn(Optional.empty());
 
         RuntimeException ex = assertThrows(RuntimeException.class,
                 () -> bookingService.bookTicket(1, 2, 10, new User()));
@@ -121,7 +121,7 @@ class BookingServiceTest {
         Showtime showtime = new Showtime();
         Seat seat = new Seat();
         when(showtimeRepo.findById(2)).thenReturn(Optional.of(showtime));
-        when(seatRepo.findBySeatNumber(10)).thenReturn(Optional.of(seat));
+        when(seatRepo.findByShowtime_ShowtimeIdAndSeatNumber(2, 10)).thenReturn(Optional.of(seat));
         when(bookingRepo.existsByShowtimeAndSeat(showtime, seat)).thenReturn(true);
 
         RuntimeException ex = assertThrows(RuntimeException.class,
@@ -171,8 +171,7 @@ class BookingServiceTest {
         SeatDTO seatDTO = new SeatDTO(2, 2, null, showtimeId, 1);
 
         when(showtimeRepo.findById(showtimeId)).thenReturn(Optional.of(showtime));
-        when(seatRepo.findByShowtime_ShowtimeId(showtimeId)).thenReturn(List.of(seat1, seat2));
-        when(bookingRepo.findByShowtime(showtime)).thenReturn(List.of(booked));
+        when(bookingRepo.findAvailableSeatsByShowtimeId(showtimeId)).thenReturn(List.of(seat2));
         when(seatMapper.toSeatDTO(seat2)).thenReturn(seatDTO);
 
         List<SeatDTO> result = bookingService.getAvailableSeats(showtimeId);

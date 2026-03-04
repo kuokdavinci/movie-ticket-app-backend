@@ -3,7 +3,6 @@ package com.example.MovieTicket.Controllers;
 import com.example.MovieTicket.Models.User;
 import com.example.MovieTicket.Services.JWTService;
 import com.example.MovieTicket.Services.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,10 +11,13 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = "*")
 @RequestMapping("/api")
 public class UserController {
-    @Autowired
-    private UserService service;
-    @Autowired
-    private JWTService jwtService;
+    private final UserService service;
+    private final JWTService jwtService;
+
+    public UserController(UserService service, JWTService jwtService) {
+        this.service = service;
+        this.jwtService = jwtService;
+    }
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody User user){

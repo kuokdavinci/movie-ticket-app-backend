@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.context.ApplicationContext;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,8 +24,6 @@ class JwtFilterTest {
     @Mock
     private JWTService jwtService;
 
-    @Mock
-    private ApplicationContext applicationContext;
 
     @Mock
     private MyUserDetailsService myUserDetailsService;
@@ -57,7 +54,6 @@ class JwtFilterTest {
         UserDetails user = User.withUsername("alice").password("pw").roles("USER").build();
 
         when(jwtService.extractUsername("abc")).thenReturn("alice");
-        when(applicationContext.getBean(MyUserDetailsService.class)).thenReturn(myUserDetailsService);
         when(myUserDetailsService.loadUserByUsername("alice")).thenReturn(user);
         when(jwtService.validateToken("abc", user)).thenReturn(true);
 
