@@ -13,6 +13,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -62,9 +64,8 @@ class BookingServiceTest {
         seat.setPrice(BigDecimal.valueOf(120000));
 
         when(showtimeRepo.findById(2)).thenReturn(Optional.of(showtime));
-        when(seatRepo.findBySeatNumber(10)).thenReturn(Optional.of(seat));
-        when(bookingRepo.existsByShowtimeAndSeat(showtime, seat)).thenReturn(false);
-        when(bookingRepo.save(any(Booking.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(seatRepo.findByShowtime_ShowtimeIdAndSeatNumber(2, 10)).thenReturn(Optional.of(seat));
+        when(bookingRepo.saveAndFlush(any(Booking.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         Booking result = bookingService.bookTicket(1, 2, 10, user);
 
@@ -73,7 +74,7 @@ class BookingServiceTest {
         assertEquals(seat, result.getSeat());
         assertEquals(BigDecimal.valueOf(120000), result.getPrice());
         assertNotNull(result.getBookingTime());
-        verify(bookingRepo).save(any(Booking.class));
+        verify(bookingRepo).saveAndFlush(any(Booking.class));
     }
 
     @Test
@@ -85,9 +86,8 @@ class BookingServiceTest {
         seat.setPrice(null);
 
         when(showtimeRepo.findById(2)).thenReturn(Optional.of(showtime));
-        when(seatRepo.findBySeatNumber(5)).thenReturn(Optional.of(seat));
-        when(bookingRepo.existsByShowtimeAndSeat(showtime, seat)).thenReturn(false);
-        when(bookingRepo.save(any(Booking.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(seatRepo.findByShowtime_ShowtimeIdAndSeatNumber(2, 5)).thenReturn(Optional.of(seat));
+        when(bookingRepo.saveAndFlush(any(Booking.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         Booking result = bookingService.bookTicket(1, 2, 5, user);
 
@@ -108,7 +108,7 @@ class BookingServiceTest {
     void bookTicket_throwWhenSeatNotFound() {
         Showtime showtime = new Showtime();
         when(showtimeRepo.findById(2)).thenReturn(Optional.of(showtime));
-        when(seatRepo.findBySeatNumber(10)).thenReturn(Optional.empty());
+        when(seatRepo.findByShowtime_ShowtimeIdAndSeatNumber(2, 10)).thenReturn(Optional.empty());
 
         RuntimeException ex = assertThrows(RuntimeException.class,
                 () -> bookingService.bookTicket(1, 2, 10, new User()));
@@ -117,17 +117,18 @@ class BookingServiceTest {
     }
 
     @Test
-    void bookTicket_throwWhenAlreadyBooked() {
+    void bookTicket_throwConflictWhenAlreadyBookedByUniqueConstraint() {
         Showtime showtime = new Showtime();
         Seat seat = new Seat();
         when(showtimeRepo.findById(2)).thenReturn(Optional.of(showtime));
-        when(seatRepo.findBySeatNumber(10)).thenReturn(Optional.of(seat));
-        when(bookingRepo.existsByShowtimeAndSeat(showtime, seat)).thenReturn(true);
+        when(seatRepo.findByShowtime_ShowtimeIdAndSeatNumber(2, 10)).thenReturn(Optional.of(seat));
+        when(bookingRepo.saveAndFlush(any(Booking.class))).thenThrow(new DataIntegrityViolationException("duplicate key"));
 
-        RuntimeException ex = assertThrows(RuntimeException.class,
+        ResponseStatusException ex = assertThrows(ResponseStatusException.class,
                 () -> bookingService.bookTicket(1, 2, 10, new User()));
 
-        assertTrue(ex.getMessage().contains("is booked"));
+        assertEquals(409, ex.getStatusCode().value());
+        assertTrue(ex.getReason().contains("is booked"));
     }
 
     @Test
@@ -146,40 +147,28 @@ class BookingServiceTest {
     }
 
     @Test
-    void getAvailableSeats_filtersBookedSeats() {
+    void getAvailableSeats_returnsOnlyAvailableFromRepositoryQuery() {
         int showtimeId = 3;
-        Movie movie = new Movie();
-        movie.setMovieId(1);
 
         Showtime showtime = new Showtime();
         showtime.setShowtimeId(showtimeId);
-        showtime.setMovie(movie);
-
-        Seat seat1 = new Seat();
-        seat1.setSeat_id(1);
-        seat1.setSeatNumber(1);
-        seat1.setShowtime(showtime);
 
         Seat seat2 = new Seat();
         seat2.setSeat_id(2);
         seat2.setSeatNumber(2);
         seat2.setShowtime(showtime);
 
-        Booking booked = new Booking();
-        booked.setSeat(seat1);
-
         SeatDTO seatDTO = new SeatDTO(2, 2, null, showtimeId, 1);
 
         when(showtimeRepo.findById(showtimeId)).thenReturn(Optional.of(showtime));
-        when(seatRepo.findByShowtime_ShowtimeId(showtimeId)).thenReturn(List.of(seat1, seat2));
-        when(bookingRepo.findByShowtime(showtime)).thenReturn(List.of(booked));
+        when(seatRepo.findAvailableSeatsByShowtimeId(showtimeId)).thenReturn(List.of(seat2));
         when(seatMapper.toSeatDTO(seat2)).thenReturn(seatDTO);
 
         List<SeatDTO> result = bookingService.getAvailableSeats(showtimeId);
 
         assertEquals(1, result.size());
         assertEquals(2, result.get(0).seatNumber());
-        verify(seatMapper, never()).toSeatDTO(seat1);
+        verify(seatRepo).findAvailableSeatsByShowtimeId(showtimeId);
         verify(seatMapper).toSeatDTO(seat2);
     }
 

@@ -10,7 +10,10 @@ import com.example.MovieTicket.Repositories.BookingRepo;
 import com.example.MovieTicket.Repositories.SeatRepo;
 import com.example.MovieTicket.Repositories.ShowtimeRepo;
 import jakarta.transaction.Transactional;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -48,12 +51,8 @@ public class BookingService {
         Showtime showtime = showtimeRepo.findById(showtimeId)
                 .orElseThrow(() -> new RuntimeException("Showtime not found!"));
 
-        Seat seat = seatRepo.findBySeatNumber(seatNumber)
+        Seat seat = seatRepo.findByShowtime_ShowtimeIdAndSeatNumber(showtimeId, seatNumber)
                 .orElseThrow(() -> new RuntimeException("Seat not found! " + seatNumber));
-
-        if (bookingRepo.existsByShowtimeAndSeat(showtime, seat)) {
-            throw new RuntimeException("Seat " + seatNumber + " is booked!");
-        }
 
         Booking booking = new Booking();
         booking.setBookingTime(LocalDateTime.now());
@@ -62,31 +61,28 @@ public class BookingService {
         booking.setSeat(seat);
         booking.setPrice(seat.getPrice() != null ? seat.getPrice() : BigDecimal.ZERO);
 
-        return bookingRepo.save(booking);
+        try {
+            return bookingRepo.saveAndFlush(booking);
+        } catch (DataIntegrityViolationException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Seat " + seatNumber + " is booked!", e);
+        }
     }
 
     public List<BookingResponseDTO> getBookingsByUser(User user) {
         return bookingRepo.findByUser(user).stream().map(bookingMapper::toBookingDTO).collect(Collectors.toList());
     }
+
     public List<SeatDTO> getAvailableSeats(int showtimeId) {
-        Showtime showtime = showtimeRepo.findById(showtimeId)
-                .orElseThrow(() -> new RuntimeException("Showtime doesn't exist"));
+        if (showtimeRepo.findById(showtimeId).isEmpty()) {
+            throw new RuntimeException("Showtime doesn't exist");
+        }
 
-        Movie movie = showtime.getMovie();
-        int movieId = (movie != null) ? movie.getMovieId() : 0;
-
-        List<Seat> allSeats = seatRepo.findByShowtime_ShowtimeId(showtimeId);
-
-        List<Seat> bookedSeats = bookingRepo.findByShowtime(showtime)
+        return seatRepo.findAvailableSeatsByShowtimeId(showtimeId)
                 .stream()
-                .map(Booking::getSeat)
-                .toList();
-
-        return allSeats.stream()
-                .filter(seat -> !bookedSeats.contains(seat))
                 .map(seatMapper::toSeatDTO)
                 .collect(Collectors.toList());
     }
+
     public void deleteBooking(int bookingId) {
         bookingRepo.deleteById(bookingId);
     }
