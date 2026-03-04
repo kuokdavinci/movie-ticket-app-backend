@@ -58,7 +58,10 @@ class BookingServiceTest {
         User user = new User();
         user.setUsername("alice");
 
+        Movie movie = new Movie();
+        movie.setMovieId(1);
         Showtime showtime = new Showtime();
+        showtime.setMovie(movie);
         Seat seat = new Seat();
         seat.setSeatNumber(10);
         seat.setPrice(BigDecimal.valueOf(120000));
@@ -80,7 +83,10 @@ class BookingServiceTest {
     @Test
     void bookTicket_defaultPriceZeroWhenSeatPriceNull() {
         User user = new User();
+        Movie movie = new Movie();
+        movie.setMovieId(1);
         Showtime showtime = new Showtime();
+        showtime.setMovie(movie);
         Seat seat = new Seat();
         seat.setSeatNumber(5);
         seat.setPrice(null);
@@ -106,7 +112,10 @@ class BookingServiceTest {
 
     @Test
     void bookTicket_throwWhenSeatNotFound() {
+        Movie movie = new Movie();
+        movie.setMovieId(1);
         Showtime showtime = new Showtime();
+        showtime.setMovie(movie);
         when(showtimeRepo.findById(2)).thenReturn(Optional.of(showtime));
         when(seatRepo.findByShowtime_ShowtimeIdAndSeatNumber(2, 10)).thenReturn(Optional.empty());
 
@@ -118,7 +127,10 @@ class BookingServiceTest {
 
     @Test
     void bookTicket_throwConflictWhenAlreadyBookedByUniqueConstraint() {
+        Movie movie = new Movie();
+        movie.setMovieId(1);
         Showtime showtime = new Showtime();
+        showtime.setMovie(movie);
         Seat seat = new Seat();
         when(showtimeRepo.findById(2)).thenReturn(Optional.of(showtime));
         when(seatRepo.findByShowtime_ShowtimeIdAndSeatNumber(2, 10)).thenReturn(Optional.of(seat));

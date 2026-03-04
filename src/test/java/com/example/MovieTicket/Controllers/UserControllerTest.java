@@ -1,5 +1,6 @@
 package com.example.MovieTicket.Controllers;
 
+import com.example.MovieTicket.DTOs.UserResponseDTO;
 import com.example.MovieTicket.Models.User;
 import com.example.MovieTicket.Services.JWTService;
 import com.example.MovieTicket.Services.UserService;
@@ -79,13 +80,15 @@ class UserControllerTest {
     @Test
     void getCurrentUser_ok() {
         User user = new User();
+        user.setUser_id(10);
         user.setUsername("alice");
+        user.setRole("ROLE_USER");
         when(jwtService.extractUsername("token")).thenReturn("alice");
         when(service.findByUsername("alice")).thenReturn(user);
 
         ResponseEntity<?> response = controller.getCurrentUser("Bearer token");
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(user, response.getBody());
+        assertEquals(new UserResponseDTO(10, "alice", "ROLE_USER"), response.getBody());
     }
 }

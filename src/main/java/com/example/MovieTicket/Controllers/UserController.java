@@ -1,5 +1,6 @@
 package com.example.MovieTicket.Controllers;
 
+import com.example.MovieTicket.DTOs.UserResponseDTO;
 import com.example.MovieTicket.Models.User;
 import com.example.MovieTicket.Services.JWTService;
 import com.example.MovieTicket.Services.UserService;
@@ -23,7 +24,7 @@ public class UserController {
     public ResponseEntity<?> register(@RequestBody User user){
         try {
             User savedUser = service.register(user);
-            return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
+            return ResponseEntity.status(HttpStatus.CREATED).body(toUserResponse(savedUser));
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         } catch (Exception e) {
@@ -48,9 +49,13 @@ public class UserController {
             if (user == null) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: User not found");
             }
-            return ResponseEntity.ok(user);
+            return ResponseEntity.ok(toUserResponse(user));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: Invalid token");
         }
+    }
+
+    private UserResponseDTO toUserResponse(User user) {
+        return new UserResponseDTO(user.getUser_id(), user.getUsername(), user.getRole());
     }
 }

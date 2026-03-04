@@ -43,13 +43,16 @@ public class BookingService {
     }
 
     public List<Showtime> getShowtimesByMovie(int movieId) {
-        return showtimeRepo.findByMovie_MovieIdAndStartTimeAfter(movieId, LocalTime.ofSecondOfDay(LocalTime.now().getHour()));
+        return showtimeRepo.findByMovie_MovieIdAndStartTimeAfter(movieId, LocalTime.now());
     }
 
     @Transactional
     public Booking bookTicket(int movieId, int showtimeId, int seatNumber, User user) {
         Showtime showtime = showtimeRepo.findById(showtimeId)
                 .orElseThrow(() -> new RuntimeException("Showtime not found!"));
+        if (showtime.getMovie() == null || showtime.getMovie().getMovieId() != movieId) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Showtime does not belong to the selected movie");
+        }
 
         Seat seat = seatRepo.findByShowtime_ShowtimeIdAndSeatNumber(showtimeId, seatNumber)
                 .orElseThrow(() -> new RuntimeException("Seat not found! " + seatNumber));
