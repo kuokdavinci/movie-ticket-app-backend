@@ -10,7 +10,6 @@ import com.example.MovieTicket.Repositories.BookingRepo;
 import com.example.MovieTicket.Repositories.SeatRepo;
 import com.example.MovieTicket.Repositories.ShowtimeRepo;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -22,21 +21,23 @@ import java.util.stream.Collectors;
 
 @Service
 public class BookingService {
+    private final BookingRepo bookingRepo;
+    private final ShowtimeRepo showtimeRepo;
+    private final SeatRepo seatRepo;
+    private final BookingMapper bookingMapper;
+    private final SeatMapper seatMapper;
 
-    @Autowired
-    private BookingRepo bookingRepo;
-
-    @Autowired
-    private ShowtimeRepo showtimeRepo;
-
-    @Autowired
-    private SeatRepo seatRepo;
-
-    @Autowired
-    private BookingMapper bookingMapper;
-
-    @Autowired
-    private SeatMapper seatMapper;
+    public BookingService(BookingRepo bookingRepo,
+                          ShowtimeRepo showtimeRepo,
+                          SeatRepo seatRepo,
+                          BookingMapper bookingMapper,
+                          SeatMapper seatMapper) {
+        this.bookingRepo = bookingRepo;
+        this.showtimeRepo = showtimeRepo;
+        this.seatRepo = seatRepo;
+        this.bookingMapper = bookingMapper;
+        this.seatMapper = seatMapper;
+    }
 
     public List<Showtime> getShowtimesByMovie(int movieId) {
         return showtimeRepo.findByMovie_MovieIdAndStartTimeAfter(movieId, LocalTime.ofSecondOfDay(LocalTime.now().getHour()));

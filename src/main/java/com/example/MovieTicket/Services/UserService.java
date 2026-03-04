@@ -3,7 +3,6 @@ package com.example.MovieTicket.Services;
 import com.example.MovieTicket.Models.User;
 import com.example.MovieTicket.Repositories.UserRepo;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -12,13 +11,16 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
-    @Autowired
-    private UserRepo repo;
-    @Autowired
-    private AuthenticationManager authenticationManager;
-    @Autowired
-    private JWTService jwtService;
-    private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
+    private final UserRepo repo;
+    private final AuthenticationManager authenticationManager;
+    private final JWTService jwtService;
+    private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
+
+    public UserService(UserRepo repo, AuthenticationManager authenticationManager, JWTService jwtService) {
+        this.repo = repo;
+        this.authenticationManager = authenticationManager;
+        this.jwtService = jwtService;
+    }
 
     @Transactional
     public User register(User user) {

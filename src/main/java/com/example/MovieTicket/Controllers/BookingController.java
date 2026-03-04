@@ -4,7 +4,6 @@ import com.example.MovieTicket.DTOs.BookingResponseDTO;
 import com.example.MovieTicket.DTOs.SeatDTO;
 import com.example.MovieTicket.Models.*;
 import com.example.MovieTicket.Services.BookingService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -16,9 +15,11 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api")
 public class BookingController {
+    private final BookingService bookingService;
 
-    @Autowired
-    private BookingService bookingService;
+    public BookingController(BookingService bookingService) {
+        this.bookingService = bookingService;
+    }
 
     @GetMapping("/movies/{movie_id}/bookings/show-times")
     public List<Showtime> getAvailableShowtimes(@PathVariable("movie_id") int movie_id) {

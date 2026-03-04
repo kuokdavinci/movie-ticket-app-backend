@@ -2,7 +2,6 @@ package com.example.MovieTicket.Controllers;
 
 import com.example.MovieTicket.Models.Movie;
 import com.example.MovieTicket.Services.MovieService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,8 +13,11 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 @RequestMapping("/api")
 public class MovieController {
-    @Autowired
-    private MovieService service;
+    private final MovieService service;
+
+    public MovieController(MovieService service) {
+        this.service = service;
+    }
 
 
     @GetMapping("/movies")
