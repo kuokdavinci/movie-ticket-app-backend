@@ -15,6 +15,6 @@ public class BookingMapper {
 
     public BookingResponseDTO toBookingDTO(Booking booking){
         ShowtimeDTO showtimeDTO = showtimeMapper.toShowtimeDTO(booking.getShowtime());
-        return new BookingResponseDTO(booking.getBooking_id(),showtimeDTO,booking.getSeat().getSeatId(),booking.getPrice(),booking.getBookingTime());
+        return new BookingResponseDTO(booking.getBooking_id(),showtimeDTO,booking.getSeat().getSeatNumber(),booking.getPrice(),booking.getBookingTime());
     }
 }

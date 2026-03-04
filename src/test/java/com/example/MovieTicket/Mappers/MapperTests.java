@@ -82,7 +82,7 @@ class MapperTests {
         ShowtimeDTO showtimeDTO = new ShowtimeDTO(LocalTime.NOON, LocalTime.MIDNIGHT, "Movie", "img");
 
         Seat seat = new Seat();
-        seat.setSeat_id(9);
+        seat.setSeatNumber(9);
 
         Booking booking = new Booking();
         booking.setBooking_id(4);

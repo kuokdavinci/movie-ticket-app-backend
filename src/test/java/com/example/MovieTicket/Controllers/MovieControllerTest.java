@@ -2,6 +2,7 @@ package com.example.MovieTicket.Controllers;
 
 import com.example.MovieTicket.Models.Movie;
 import com.example.MovieTicket.Services.JWTService;
+import com.example.MovieTicket.Services.MyUserDetailsService;
 import com.example.MovieTicket.Services.MovieService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,6 +37,9 @@ class MovieControllerTest {
 
     @MockitoBean
     private JWTService jwtService;
+
+    @MockitoBean
+    private MyUserDetailsService myUserDetailsService;
 
     private Movie movie1;
     private Movie movie2;
