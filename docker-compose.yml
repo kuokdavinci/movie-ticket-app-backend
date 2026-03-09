@@ -1,22 +1,38 @@
-
 services:
-  app:
-    build: .
-    ports:
-      - 8090:8080
-    networks:
-      - s-network
   postgres:
-    image: postgres:latest
+    image: postgres:18-alpine
+    container_name: movieticket-postgres
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 123456aA@
-      POSTGRES_DB: movieticket_db
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-123456aA@}
+      POSTGRES_DB: ${POSTGRES_DB:-movieticket_db}
     ports:
-      - 5432:5432
-    networks:
-      - s-network
+      - "${POSTGRES_HOST_PORT:-5433}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-movieticket_db}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
-networks:
-  s-network:
-    driver: bridge
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: movieticket-app
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://${POSTGRES_HOST:-postgres}:${POSTGRES_PORT:-5432}/${POSTGRES_DB:-movieticket_db}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-postgres}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-123456aA@}
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      JWT_SECRET: ${JWT_SECRET:-ZGV2LXNlY3JldC1rZXktZm9yLWxvY2FsLXRlc3Rpbmctb25seS0xMjM0NTY3ODkw}
+    ports:
+      - "8090:8080"
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
