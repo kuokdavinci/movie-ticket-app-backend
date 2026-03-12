@@ -1,0 +1,148 @@
+{
+    "metrics": {
+        "data_sent": {
+            "count": 1121962,
+            "rate": 36902.56906659075
+        },
+        "http_req_sending": {
+            "p(90)": 0,
+            "p(95)": 0,
+            "avg": 0.017228222678530684,
+            "min": 0,
+            "med": 0,
+            "max": 5.4768
+        },
+        "vus": {
+            "max": 30,
+            "value": 30,
+            "min": 30
+        },
+        "http_req_duration{expected_response:true}": {
+            "p(95)": 9.0099,
+            "avg": 5.79851996349527,
+            "min": 1.7041,
+            "med": 4.94,
+            "max": 231.7575,
+            "p(90)": 7.8408
+        },
+        "vus_max": {
+            "value": 30,
+            "min": 30,
+            "max": 30
+        },
+        "data_received": {
+            "count": 3318268,
+            "rate": 109141.49859929121
+        },
+        "http_req_failed": {
+            "fails": 4383,
+            "passes": 0,
+            "thresholds": {
+                "rate<0.01": false
+            },
+            "value": 0
+        },
+        "http_reqs": {
+            "count": 4383,
+            "rate": 144.16170977169216
+        },
+        "http_req_blocked": {
+            "avg": 0.021249190052475483,
+            "min": 0,
+            "med": 0,
+            "max": 5.98,
+            "p(90)": 0,
+            "p(95)": 0
+        },
+        "http_req_connecting": {
+            "avg": 0.008190006844626967,
+            "min": 0,
+            "med": 0,
+            "max": 2.0569,
+            "p(90)": 0,
+            "p(95)": 0
+        },
+        "checks": {
+            "passes": 2,
+            "fails": 0,
+            "value": 1
+        },
+        "http_req_tls_handshaking": {
+            "med": 0,
+            "max": 0,
+            "p(90)": 0,
+            "p(95)": 0,
+            "avg": 0,
+            "min": 0
+        },
+        "http_req_waiting": {
+            "p(95)": 8.797639999999996,
+            "avg": 5.6858211270818595,
+            "min": 1.7041,
+            "med": 4.8012,
+            "max": 231.7575,
+            "p(90)": 7.759180000000001
+        },
+        "iterations": {
+            "count": 4382,
+            "rate": 144.12881866747776
+        },
+        "http_req_receiving": {
+            "max": 5.3792,
+            "p(90)": 0.5102,
+            "p(95)": 0.5332,
+            "avg": 0.09547061373488464,
+            "min": 0,
+            "med": 0
+        },
+        "iteration_duration": {
+            "med": 205.515,
+            "max": 274.706,
+            "p(90)": 208.5988,
+            "p(95)": 209.7982,
+            "avg": 206.33721928343093,
+            "min": 202.3428
+        },
+        "http_req_duration": {
+            "p(95)": 9.0099,
+            "avg": 5.79851996349527,
+            "min": 1.7041,
+            "med": 4.94,
+            "max": 231.7575,
+            "p(90)": 7.8408
+        }
+    },
+    "setup_data": {
+        "token": "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJxdW9jIiwiaWF0IjoxNzczMDc5MDI0LCJleHAiOjE3NzMwODA4MjR9.T_xAZ8pQWkh9t-bpkikC2GVQiIIKHeQjSrQGB6J9zzfeCfpmx9uPfw1K0cuj1aoP"
+    },
+    "root_group": {
+        "groups": {
+            "setup": {
+                "name": "setup",
+                "path": "::setup",
+                "id": "5c0f8025f7e0b6654089e5b00e950f1a",
+                "groups": {},
+                "checks": {
+                        "login status is 200": {
+                            "name": "login status is 200",
+                            "path": "::setup::login status is 200",
+                            "id": "bb27b460b057923f4a083e3603c038b9",
+                            "passes": 1,
+                            "fails": 0
+                        },
+                        "token exists": {
+                            "id": "4c51e9d0b146ebe0f0a677c8d29ce4a5",
+                            "passes": 1,
+                            "fails": 0,
+                            "name": "token exists",
+                            "path": "::setup::token exists"
+                        }
+                    }
+            }
+        },
+        "checks": {},
+        "name": "",
+        "path": "",
+        "id": "d41d8cd98f00b204e9800998ecf8427e"
+    }
+}
