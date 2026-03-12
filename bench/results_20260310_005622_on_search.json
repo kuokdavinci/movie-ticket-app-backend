@@ -1,0 +1,148 @@
+{
+    "metrics": {
+        "http_req_failed": {
+            "passes": 0,
+            "fails": 4411,
+            "thresholds": {
+                "rate<0.01": false
+            },
+            "value": 0
+        },
+        "http_req_sending": {
+            "p(95)": 0,
+            "avg": 0.01013577420086148,
+            "min": 0,
+            "med": 0,
+            "max": 1.2083,
+            "p(90)": 0
+        },
+        "data_received": {
+            "rate": 116726.77998166664,
+            "count": 3546734
+        },
+        "http_req_blocked": {
+            "p(95)": 0,
+            "avg": 0.009557583314441174,
+            "min": 0,
+            "med": 0,
+            "max": 3.7178,
+            "p(90)": 0
+        },
+        "http_req_duration{expected_response:true}": {
+            "avg": 4.547616254817511,
+            "min": 1.5088,
+            "med": 3.8398,
+            "max": 223.8333,
+            "p(90)": 5.0116,
+            "p(95)": 5.9523
+        },
+        "iteration_duration": {
+            "p(90)": 205.5514,
+            "p(95)": 206.553575,
+            "avg": 205.01722986394807,
+            "min": 202.0279,
+            "med": 204.3253,
+            "max": 285.0119
+        },
+        "vus_max": {
+            "value": 30,
+            "min": 30,
+            "max": 30
+        },
+        "data_sent": {
+            "count": 1217330,
+            "rate": 40063.62221556007
+        },
+        "vus": {
+            "value": 30,
+            "min": 30,
+            "max": 30
+        },
+        "http_req_connecting": {
+            "avg": 0.006128814327816816,
+            "min": 0,
+            "med": 0,
+            "max": 0.9745,
+            "p(90)": 0,
+            "p(95)": 0
+        },
+        "http_req_waiting": {
+            "min": 1.5088,
+            "med": 3.7792,
+            "max": 222.3285,
+            "p(90)": 4.8977,
+            "p(95)": 5.9164,
+            "avg": 4.485585876218551
+        },
+        "http_req_receiving": {
+            "med": 0,
+            "max": 4.3799,
+            "p(90)": 0,
+            "p(95)": 0.50835,
+            "avg": 0.05189460439809571,
+            "min": 0
+        },
+        "iterations": {
+            "count": 4410,
+            "rate": 145.13778019979785
+        },
+        "http_req_tls_handshaking": {
+            "avg": 0,
+            "min": 0,
+            "med": 0,
+            "max": 0,
+            "p(90)": 0,
+            "p(95)": 0
+        },
+        "http_reqs": {
+            "count": 4411,
+            "rate": 145.17069126106765
+        },
+        "checks": {
+            "passes": 2,
+            "fails": 0,
+            "value": 1
+        },
+        "http_req_duration": {
+            "p(90)": 5.0116,
+            "p(95)": 5.9523,
+            "avg": 4.547616254817511,
+            "min": 1.5088,
+            "med": 3.8398,
+            "max": 223.8333
+        }
+    },
+    "setup_data": {
+        "token": "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJxdW9jIiwiaWF0IjoxNzczMDc5MDU1LCJleHAiOjE3NzMwODA4NTV9.8wdStvIWWZGTELNfQG6diHAyrMeqc2hCXOrTj0HZkarDGyDSiRvTMfjV50KhMwIz"
+    },
+    "root_group": {
+        "id": "d41d8cd98f00b204e9800998ecf8427e",
+        "groups": {
+            "setup": {
+                "name": "setup",
+                "path": "::setup",
+                "id": "5c0f8025f7e0b6654089e5b00e950f1a",
+                "groups": {},
+                "checks": {
+                        "login status is 200": {
+                            "passes": 1,
+                            "fails": 0,
+                            "name": "login status is 200",
+                            "path": "::setup::login status is 200",
+                            "id": "bb27b460b057923f4a083e3603c038b9"
+                        },
+                        "token exists": {
+                            "id": "4c51e9d0b146ebe0f0a677c8d29ce4a5",
+                            "passes": 1,
+                            "fails": 0,
+                            "name": "token exists",
+                            "path": "::setup::token exists"
+                        }
+                    }
+            }
+        },
+        "checks": {},
+        "name": "",
+        "path": ""
+    }
+}
