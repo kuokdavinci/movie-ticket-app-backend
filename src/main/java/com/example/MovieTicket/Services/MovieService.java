@@ -5,6 +5,7 @@ import com.example.MovieTicket.Repositories.MovieRepo;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,9 +18,9 @@ public class MovieService {
         this.repo = repo;
     }
 
-    @Cacheable(value = "moviesList", key = "'all'")
-    public List<Movie> getAllMovies() {
-        return repo.findAll();
+    @Cacheable(value = "moviesList", key = "'page:' + #pageable.pageNumber + ':size:' + #pageable.pageSize")
+    public List<Movie> getAllMovies(Pageable pageable) {
+        return repo.findAll(pageable).getContent();
     }
 
     @Cacheable(value = "moviesById", key = "#movieId", unless = "#result == null")
@@ -28,7 +29,7 @@ public class MovieService {
     }
 
     @Caching(evict = {
-            @CacheEvict(value = "moviesList", key = "'all'"),
+            @CacheEvict(value = "moviesList", allEntries = true),
             @CacheEvict(value = "moviesSearch", allEntries = true)
     })
     public Movie addMovie(Movie movie) {
@@ -36,7 +37,7 @@ public class MovieService {
     }
 
     @Caching(evict = {
-            @CacheEvict(value = "moviesList", key = "'all'"),
+            @CacheEvict(value = "moviesList", allEntries = true),
             @CacheEvict(value = "moviesById", key = "#movie.movieId"),
             @CacheEvict(value = "moviesSearch", allEntries = true)
     })
@@ -45,7 +46,7 @@ public class MovieService {
     }
 
     @Caching(evict = {
-            @CacheEvict(value = "moviesList", key = "'all'"),
+            @CacheEvict(value = "moviesList", allEntries = true),
             @CacheEvict(value = "moviesById", key = "#movieId"),
             @CacheEvict(value = "moviesSearch", allEntries = true)
     })

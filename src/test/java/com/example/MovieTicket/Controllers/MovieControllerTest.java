@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -60,7 +61,7 @@ class MovieControllerTest {
 
     @Test
     void testGetAllMovies() throws Exception {
-        when(movieService.getAllMovies()).thenReturn(movieList);
+        when(movieService.getAllMovies(any(Pageable.class))).thenReturn(movieList);
 
         mockMvc.perform(get("/api/movies"))
                 .andExpect(status().isOk())
@@ -68,7 +69,7 @@ class MovieControllerTest {
                 .andExpect(jsonPath("$[0].name").value("Tom & Jerry"))
                 .andExpect(jsonPath("$[1].name").value("Avengers"));
 
-        verify(movieService).getAllMovies();
+        verify(movieService).getAllMovies(any(Pageable.class));
     }
 
     @Test

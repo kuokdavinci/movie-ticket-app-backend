@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.Arrays;
 import java.util.List;
@@ -32,12 +34,13 @@ class MovieServiceTest {
     void testGetAllMovies() {
         Movie movie1 = new Movie();
         Movie movie2 = new Movie();
-        when(movieRepo.findAll()).thenReturn(Arrays.asList(movie1, movie2));
+        List<Movie> movies = Arrays.asList(movie1, movie2);
+        when(movieRepo.findAll(any(PageRequest.class))).thenReturn(new PageImpl<>(movies));
 
-        List<Movie> result = movieService.getAllMovies();
+        List<Movie> result = movieService.getAllMovies(PageRequest.of(0, 30));
 
         assertEquals(2, result.size());
-        verify(movieRepo, times(1)).findAll();
+        verify(movieRepo, times(1)).findAll(any(PageRequest.class));
     }
 
     @Test

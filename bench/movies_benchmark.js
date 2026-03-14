@@ -13,6 +13,7 @@ const BASE_URL = __ENV.BASE_URL || "http://localhost:8090";
 const LOGIN_USER = __ENV.LOGIN_USER || "quoc";
 const LOGIN_PASS = __ENV.LOGIN_PASS || "q@123";
 const ENDPOINT_MODE = (__ENV.ENDPOINT_MODE || "mixed").toLowerCase();
+const LIST_QUERY = __ENV.LIST_QUERY || "";
 
 export function setup() {
   const payload = JSON.stringify({
@@ -38,17 +39,17 @@ export default function (data) {
   };
 
   if (ENDPOINT_MODE === "list") {
-    http.get(`${BASE_URL}/api/movies`, { headers });
+    http.get(`${BASE_URL}/api/movies${LIST_QUERY}`, { headers });
   } else if (ENDPOINT_MODE === "id") {
-    http.get(`${BASE_URL}/api/movies/1`, { headers });
+    http.get(`${BASE_URL}/api/movies/300`, { headers });
   } else if (ENDPOINT_MODE === "search") {
     http.get(`${BASE_URL}/api/movies/search?keyword=action`, { headers });
   } else {
     const roll = Math.random();
     if (roll < 0.7) {
-      http.get(`${BASE_URL}/api/movies`, { headers });
+      http.get(`${BASE_URL}/api/movies${LIST_QUERY}`, { headers });
     } else if (roll < 0.9) {
-      http.get(`${BASE_URL}/api/movies/1`, { headers });
+      http.get(`${BASE_URL}/api/movies/300`, { headers });
     } else {
       http.get(`${BASE_URL}/api/movies/search?keyword=action`, { headers });
     }

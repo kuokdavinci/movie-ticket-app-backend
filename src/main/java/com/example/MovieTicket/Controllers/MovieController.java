@@ -2,11 +2,12 @@ package com.example.MovieTicket.Controllers;
 
 import com.example.MovieTicket.Models.Movie;
 import com.example.MovieTicket.Services.MovieService;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
@@ -21,8 +22,11 @@ public class MovieController {
 
 
     @GetMapping("/movies")
-    public ResponseEntity<List<Movie>> getAllMovies() {
-        return new ResponseEntity<>(service.getAllMovies(), HttpStatus.OK);
+    public ResponseEntity<List<Movie>> getAllMovies(
+            @RequestParam( required = false,defaultValue = "0")int pageNum,
+            @RequestParam( required = false,defaultValue = "30")int pageSize
+    ) {
+        return new ResponseEntity<>(service.getAllMovies(PageRequest.of(pageNum,pageSize)), HttpStatus.OK);
     }
 
     @GetMapping("/movies/{movieId}")
