@@ -22,8 +22,4 @@ public class Showtime {
     @JoinColumn(name = "movie_id", nullable = false)
     private Movie movie;
 
-
-//    @OneToMany(mappedBy = "showtime")
-//    @JsonManagedReference
-//    private List<Booking> bookings;
 }
